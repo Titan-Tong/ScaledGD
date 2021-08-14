@@ -88,13 +88,13 @@ fig_name = sprintf('RPCA_noise_n=%d_r=%d_alpha=%g', n, r, alpha);
 
 function S = Tproj(Z, alpha, n1, n2)
 % Keep alpha fraction of largest entries in each row and column of Z
-    krow = floor(alpha*n1);
-    kcol = floor(alpha*n2);
-    [~, loc_row] = maxk(abs(Z'), krow, 1);
+    kcol = floor(alpha*n1);
+    krow = floor(alpha*n2);
     [~, loc_col] = maxk(abs(Z), kcol, 1);
-    id_row = repmat(1:n1, krow, 1);
+    [~, loc_row] = maxk(abs(Z'), krow, 1);
     id_col = repmat(1:n2, kcol, 1);
-    mask_row = sparse(id_row(:), loc_row(:), 1, n1, n2);
+    id_row = repmat(1:n1, krow, 1);
     mask_col = sparse(loc_col(:), id_col(:), 1, n1, n2);
-    S = Z.*mask_row.*mask_col;
+    mask_row = sparse(id_row(:), loc_row(:), 1, n1, n2);
+    S = Z.*mask_col.*mask_row;
 end
